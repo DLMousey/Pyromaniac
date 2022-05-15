@@ -21,6 +21,29 @@ Support for custom response shapes is on the nice-to-have list for the future so
 - [ ] Pseudo-random content type changes, expecting json? too bad!
 - [ ] Psuedo-random HTTP status code selection, make sure your error handling logic isn't only checking the code
 
+## Installation
+
+### Mac and Linux 
+
+Pyromaniac isn't available on NuGet just yet, but it can be installed locally. To install it;
+
+- `git clone https://github.com/DLMousey/Pyromaniac`
+- cd `Pyromaniac`
+- `dotnet pack` + make a note of where the `nupkg` file is created
+- Edit `~/.nuget/NuGet/NuGet.Config`
+- Inside `<packageSources>` add the following;
+```
+<add key="pyromaniac-local" value="<PATH/TO/NUPKG/FILE>" />
+```
+- You should now be able to install Pyromaniac by `cd`ing to your project directory and running;
+```
+dotnet package add pyromaniac
+```
+
+### Windows install
+
+I don't currently have a Windows machine to test installation on, PRs more than welcome with instructions
+
 ## Configuration
 
 Pyromaniac uses your application's `IConfiguration` to get it's config values, so you'll have to create a `pyromaniac` section somewhere
