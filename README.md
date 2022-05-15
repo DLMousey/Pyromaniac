@@ -1,6 +1,25 @@
 # Pyromaniac :fire:
 
 A tiny piece of ASP.NET Core middleware that'll pseudo-randomly burn an API response to keep developers on their toes.
+When Pyromaniac decides to burn a response it'll return the following instead;
+```json
+{
+  "Status":500,
+  "Message":"Pyromaniac burned this response",
+  "Data": {
+    "invokeChance":90,
+    "rolledValue":22
+  }
+}
+```
+
+Support for custom response shapes is on the nice-to-have list for the future so you integrate non-standard response envelopes.
+
+## Feature wishlist (PRs more than welcome)
+
+- [ ] Optional support for long/unhelpful error messages, useful for detection raw error responses being displayed
+- [ ] Pseudo-random content type changes, expecting json? too bad!
+- [ ] Psuedo-random HTTP status code selection, make sure your error handling logic isn't only checking the code
 
 ## Configuration
 
