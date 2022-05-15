@@ -13,13 +13,13 @@ When Pyromaniac decides to burn a response it'll return the following instead;
 }
 ```
 
-Support for custom response shapes is on the nice-to-have list for the future so you integrate non-standard response envelopes.
+Support for custom response shapes is on the nice-to-have list for the future so you can integrate non-standard response envelopes.
 
 ## Feature wishlist (PRs more than welcome)
 
-- [ ] Optional support for long/unhelpful error messages, useful for detection raw error responses being displayed
+- [ ] Optional support for long/unhelpful error messages, useful for detection of raw error responses being displayed
 - [ ] Pseudo-random content type changes, expecting json? too bad!
-- [ ] Psuedo-random HTTP status code selection, make sure your error handling logic isn't only checking the code
+- [ ] Psuedo-random HTTP status code selection, make sure your error handling logic isn't only checking the status code
 
 ## Installation
 
