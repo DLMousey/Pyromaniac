@@ -51,15 +51,19 @@ in your config for it to work.
 
 ### Via appsettings
 
-Add a new `pyromaniac` object to your appsettings.json/appsettings.Development.json files.
+Add a new `Pyromaniac` object to your appsettings.json/appsettings.Development.json files.
 ```json
   {
-      "pyromaniac": {
-        "enabled": true,
-        "invokeChance": 90
+      "Pyromaniac": {
+        "Enabled": true,
+        "InvokeChance": 90,
+        "LogLevel": "Information",
+        "Verbose": true
       }
   }
 ```
+
+_(nb: `LogLevel` and `Verbose` are optional - if verbose mode is not enabled no logging will happen)_
 
 ### Via separate config file
 
@@ -68,9 +72,11 @@ If you want to keep pyromaniac's config out of your appsettings (e.g. ensuring i
 Create a new config file (e.g. `pyromaniac.json`) and add the config object;
 ```json
   {
-  "pyromaniac": {
-    "enabled": true,
-    "invokeChance": 90
+  "Pyromaniac": {
+    "Enabled": true,
+    "InvokeChance": 90,
+    "LogLevel": "Information",
+    "Verbose": true
   }
 }
 ```
