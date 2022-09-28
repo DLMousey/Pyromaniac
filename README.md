@@ -23,9 +23,17 @@ Support for custom response shapes is on the nice-to-have list for the future so
 
 ## Installation
 
-### Mac and Linux 
+### NuGet Install
 
-Pyromaniac isn't available on NuGet just yet, but it can be installed locally. To install it;
+~~Pyromaniac isn't available on NuGet just yet, but it can be installed locally. To install it;~~
+
+Pyromaniac is now available on NuGet! https://www.nuget.org/packages/pyromaniac
+
+`dotnet add package Pyromaniac --version 1.0.0`
+
+### Local Install
+
+If you don't want to use NuGet or you want to test out changes to the middleware you can install it locally from source
 
 - `git clone https://github.com/DLMousey/Pyromaniac`
 - cd `Pyromaniac`
@@ -37,7 +45,7 @@ Pyromaniac isn't available on NuGet just yet, but it can be installed locally. T
 ```
 - You should now be able to install Pyromaniac by `cd`ing to your project directory and running;
 ```
-dotnet package add pyromaniac
+dotnet add package pyromaniac
 ```
 
 ### Windows install
