@@ -1,7 +1,8 @@
-﻿using System.Text.Json;
+﻿using Pyromaniac.DTOs;
+using System.Text.Json;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Configuration;
 
 namespace Pyromaniac;
 
@@ -26,8 +27,8 @@ public class Pyromaniac
         IConfigurationSection pyroConfig = _config.GetSection("Pyromaniac");
         if (!pyroConfig.Exists())
         {
-            LogOnce("Pyromaniac is not configured - skipping");
-            
+            LogOnce("Pyromaniac Is Not Configured - Skipping...");
+
             await _next(context);
             return;
         }
@@ -35,7 +36,7 @@ public class Pyromaniac
         if (!pyroConfig.GetValue<bool>("Enabled"))
         {
             LogOnce("Pyromaniac is disabled - skipping");
-            
+
             await _next(context);
             return;
         }
@@ -43,7 +44,7 @@ public class Pyromaniac
         int invokeChance = pyroConfig.GetValue<int>("InvokeChance");
         int randomValue = new Random().Next(1, 100);
 
-        ResponseEnvelope result = new ResponseEnvelope
+        ResponseEnvelope result = new()
         {
             Data = new
             {
@@ -54,25 +55,16 @@ public class Pyromaniac
 
         if (randomValue <= invokeChance)
         {
-            LogIfAllowed($"Response burned a response - rolled {randomValue}");
-            
+            LogIfAllowed($"Response Burned A Response - Rolled {randomValue}");
+
             context.Response.StatusCode = result.Status;
             context.Response.ContentType = "application/json";
             await context.Response.WriteAsync(JsonSerializer.Serialize(result));
-            
+
             return;
         }
 
         await _next(context);
-    }
-
-    private class ResponseEnvelope
-    {
-        public int Status { get; init; } = 500;
-
-        public string Message { get; init; } = "Pyromaniac burned this response";
-
-        public dynamic? Data { get; set; }
     }
 
     private void LogOnce(string message)
@@ -85,7 +77,7 @@ public class Pyromaniac
         _logger.LogWarning(message);
         _logCatch = true;
     }
-    
+
     private void LogIfAllowed(string message)
     {
         if (!_config.GetValue<bool>("Pyromaniac:verbose"))
@@ -95,7 +87,7 @@ public class Pyromaniac
 
         LogLevel permittedLogLevel;
         Enum.TryParse(_config.GetValue<string>("Pyromaniac:LogLevel", "Debug"), out permittedLogLevel);
-        
+
         _logger.Log(permittedLogLevel, message);
     }
 }
