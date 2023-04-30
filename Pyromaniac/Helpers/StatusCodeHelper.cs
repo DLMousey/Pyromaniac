@@ -12,7 +12,7 @@
         /// <returns></returns>
         private static int FetchStatusCode()
         {
-            return ValidResponseCodes.OrderBy(x => Guid.NewGuid()).FirstOrDefault();
+            return ValidResponseCodes.OrderBy(x => Guid.NewGuid()).First();
         }
 
         /// <summary>
@@ -21,7 +21,7 @@
         /// <returns></returns>
         private static int? FetchStatusCodeByConfiguration()
         {
-            var configValidStatusCodes = Pyromaniac.Configuratuion["Pyromaniac:StatusCodes"]?.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToList();
+            var configValidStatusCodes = ConfigurationHelper.Configuration["Pyromaniac:StatusCodes"]?.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToList();
 
             if (configValidStatusCodes is null || configValidStatusCodes.Count == 0)
                 return null;

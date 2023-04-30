@@ -11,21 +11,19 @@ public class Pyromaniac
 {
     private readonly RequestDelegate _next;
     private readonly ILogger<Pyromaniac> _logger;
-    public static IConfiguration Configuratuion { get; private set; }
 
     // Catch Used To Stop Things Being Logged Multiple Times
-    private bool _logCatch = false;
+    private bool _isLogCatched = false;
 
-    public Pyromaniac(RequestDelegate next, IConfiguration configuration, ILoggerFactory logger)
+    public Pyromaniac(RequestDelegate next, ILoggerFactory logger)
     {
         _next = next;
-        Configuratuion = configuration;
         _logger = logger.CreateLogger<Pyromaniac>();
     }
 
     public async Task Invoke(HttpContext context)
     {
-        IConfigurationSection pyroConfig = Configuratuion.GetSection("Pyromaniac");
+        IConfigurationSection pyroConfig = ConfigurationHelper.Configuration.GetSection("Pyromaniac");
         if (!pyroConfig.Exists())
         {
             LogOnce("Pyromaniac Is Not Configured In AppSettings | Skipping...");
@@ -72,21 +70,21 @@ public class Pyromaniac
 
     private void LogOnce(string message)
     {
-        if (_logCatch)
+        if (_isLogCatched)
         {
             return;
         }
 
         _logger.LogWarning(message);
-        _logCatch = true;
+        _isLogCatched = true;
     }
 
     private void LogIfAllowed(string message)
     {
-        if (!Configuratuion.GetValue<bool>("Pyromaniac:Verbose"))
+        if (!ConfigurationHelper.Configuration.GetValue<bool>("Pyromaniac:Verbose"))
             return;
 
-        Enum.TryParse(Configuratuion.GetValue<string>("Pyromaniac:LogLevel", "Debug"), out LogLevel permittedLogLevel);
+        Enum.TryParse(ConfigurationHelper.Configuration.GetValue<string>("Pyromaniac:LogLevel", "Debug"), out LogLevel permittedLogLevel);
 
         _logger.Log(permittedLogLevel, message);
     }

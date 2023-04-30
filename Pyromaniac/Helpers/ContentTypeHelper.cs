@@ -12,7 +12,7 @@
         /// <returns></returns>
         private static string FetchContentType()
         {
-            return ValidContentTypes.OrderBy(x => Guid.NewGuid()).FirstOrDefault();
+            return ValidContentTypes.OrderBy(x => Guid.NewGuid()).First();
         }
 
         /// <summary>
@@ -21,7 +21,7 @@
         /// <returns></returns>
         private static string? FetchContentTypeByConfiguration()
         {
-            var configValidContentTypes = Pyromaniac.Configuratuion["Pyromaniac:ContentTypes"]?.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+            var configValidContentTypes = ConfigurationHelper.Configuration["Pyromaniac:ContentTypes"]?.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList();
 
             if (configValidContentTypes is null || configValidContentTypes.Count == 0)
                 return null;
