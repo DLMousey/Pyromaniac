@@ -1,8 +1,8 @@
 ﻿namespace Pyromaniac.DTOs.Outbound
 {
-    public class InvokationChangeOutputDto
+    public class InvokationChanceOutputDto
     {
-        public int InvokeChange { get; set; }
+        public int InvokeChance { get; set; }
 
         public int RolledValue { get; set; }
     }

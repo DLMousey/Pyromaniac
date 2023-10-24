@@ -5,6 +5,6 @@
         public int StatusCode { get; init; }
         public string Message { get; init; } = "Pyromaniac Burned This Response";
 
-        public InvokationChangeOutputDto? Data { get; set; }
+        public InvokationChanceOutputDto? Data { get; set; }
     }
 }

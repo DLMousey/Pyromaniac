@@ -45,9 +45,9 @@ public class Pyromaniac
 
         ResponseOutputDto response = new()
         {
-            Data = new InvokationChangeOutputDto
+            Data = new InvokationChanceOutputDto
             {
-                InvokeChange = invokeChance,
+                InvokeChance = invokeChance,
                 RolledValue = randomValue
             }
         };
