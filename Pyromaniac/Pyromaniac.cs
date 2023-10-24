@@ -1,33 +1,32 @@
-﻿using Pyromaniac.DTOs;
-using System.Text.Json;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using Pyromaniac.DTOs.Outbound;
+using Pyromaniac.Helpers;
+using System.Text.Json;
 
 namespace Pyromaniac;
 
 public class Pyromaniac
 {
     private readonly RequestDelegate _next;
-    private readonly IConfiguration _config;
     private readonly ILogger<Pyromaniac> _logger;
 
-    // Catch used to stop things being logged multiple times
-    private bool _logCatch = false;
+    // Catch Used To Stop Things Being Logged Multiple Times
+    private bool _isLogCatched = false;
 
-    public Pyromaniac(RequestDelegate next, IConfiguration config, ILoggerFactory logger)
+    public Pyromaniac(RequestDelegate next, ILoggerFactory logger)
     {
         _next = next;
-        _config = config;
         _logger = logger.CreateLogger<Pyromaniac>();
     }
 
     public async Task Invoke(HttpContext context)
     {
-        IConfigurationSection pyroConfig = _config.GetSection("Pyromaniac");
+        IConfigurationSection pyroConfig = ConfigurationHelper.Configuration.GetSection("Pyromaniac");
         if (!pyroConfig.Exists())
         {
-            LogOnce("Pyromaniac Is Not Configured - Skipping...");
+            LogOnce("Pyromaniac Is Not Configured In AppSettings | Skipping...");
 
             await _next(context);
             return;
@@ -35,7 +34,7 @@ public class Pyromaniac
 
         if (!pyroConfig.GetValue<bool>("Enabled"))
         {
-            LogOnce("Pyromaniac is disabled - skipping");
+            LogOnce("Pyromaniac Is Disabled In AppSettings | Skipping...");
 
             await _next(context);
             return;
@@ -44,22 +43,22 @@ public class Pyromaniac
         int invokeChance = pyroConfig.GetValue<int>("InvokeChance");
         int randomValue = new Random().Next(1, 100);
 
-        ResponseEnvelope result = new()
+        ResponseOutputDto response = new()
         {
-            Data = new
+            Data = new InvokationChanceOutputDto
             {
-                invokeChance,
-                rolledValue = randomValue
+                InvokeChance = invokeChance,
+                RolledValue = randomValue
             }
         };
 
         if (randomValue <= invokeChance)
         {
-            LogIfAllowed($"Response Burned A Response - Rolled {randomValue}");
+            LogIfAllowed($"Pyromaniac Burned This Response - Rolled {randomValue}.");
 
-            context.Response.StatusCode = result.Status;
-            context.Response.ContentType = "application/json";
-            await context.Response.WriteAsync(JsonSerializer.Serialize(result));
+            context.Response.StatusCode = StatusCodeHelper.Fetch();
+            context.Response.ContentType = ContentTypeHelper.Fetch();
+            await context.Response.WriteAsync(JsonSerializer.Serialize(response));
 
             return;
         }
@@ -67,27 +66,28 @@ public class Pyromaniac
         await _next(context);
     }
 
+    #region Private Methods & Functions
+
     private void LogOnce(string message)
     {
-        if (_logCatch)
+        if (_isLogCatched)
         {
             return;
         }
 
         _logger.LogWarning(message);
-        _logCatch = true;
+        _isLogCatched = true;
     }
 
     private void LogIfAllowed(string message)
     {
-        if (!_config.GetValue<bool>("Pyromaniac:verbose"))
-        {
+        if (!ConfigurationHelper.Configuration.GetValue<bool>("Pyromaniac:Verbose"))
             return;
-        }
 
-        LogLevel permittedLogLevel;
-        Enum.TryParse(_config.GetValue<string>("Pyromaniac:LogLevel", "Debug"), out permittedLogLevel);
+        Enum.TryParse(ConfigurationHelper.Configuration.GetValue<string>("Pyromaniac:LogLevel", "Debug"), out LogLevel permittedLogLevel);
 
         _logger.Log(permittedLogLevel, message);
     }
+
+    #endregion
 }
